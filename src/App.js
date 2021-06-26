@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import cookie from 'react-cookies';
 import './App.css';
 var VIDEOS = [
   {
     id: 1,
-    video: 'https://player.vimeo.com/external/180176353.sd.mp4?s=88b759e26e55d2bd1ed3670fbdc42a3711ca2501&profile_id=164&oauth2_token_id=57447761',
+    video: 'https://player.vimeo.com/external/368320203.sd.mp4?s=38b1bac5d627b94fb902597643461ee5f233d00a&profile_id=139&oauth2_token_id=57447761',
   },
   {
     id: 2,
@@ -12,32 +11,34 @@ var VIDEOS = [
   },
   {
     id: 3,
-    video: 'https://player.vimeo.com/external/503933873.sd.mp4?s=361a8523f371783a9e969198ea774e3d6e03a9dc&profile_id=139&oauth2_token_id=57447761',
+    video: 'https://player.vimeo.com/external/314714772.sd.mp4?s=b3d92ace8cc000fb98770b2e59ade626f98ce642&profile_id=164&oauth2_token_id=57447761',
   }
 ];
 
 function App() {
-  const [source, setSource] = useState(VIDEOS[0].video);
-  sessionStorage.setItem("videoID", 1);
+  const [source, setSource] = useState();
 
-  // function setCookie(cName, cValue) {
-  //   document.cookie = cName + "=" + cValue + "; path=/;";
-  // }
+  console.log(window.location);
   useEffect(() => {
+    let arr = [];
+    VIDEOS.forEach((obj) => {
+      arr.push(obj.id);
+    })
     for (var i = 0 ; i < VIDEOS.length ; i++) {
-      if (sessionStorage.getItem('videoID') !== VIDEOS[i].id) {
+      if (sessionStorage.getItem('videoID') == null) {
         sessionStorage.setItem("videoID", VIDEOS[i].id);
         setSource(VIDEOS[i].video);
         break;
+      } else if (sessionStorage.getItem('videoID') != VIDEOS[i].id) {
+        const filterArr = arr.filter((id) => id != sessionStorage.getItem('videoID'));
+        let randomValue = filterArr[Math.floor(Math.random() * filterArr.length)];
+        console.log(randomValue);
+        sessionStorage.setItem("videoID", randomValue);
+        setSource(VIDEOS[randomValue-1].video);
+        break;
       }
     }
-    // VIDEOS.forEach((obj) => {
-    //   if (sessionStorage.getItem('videoID') !== obj.id) {
-    //     sessionStorage.setItem("videoID", obj.id);
-    //     setSource(obj.video);
-    //   }
-    //   return;
-    // });
+    
   }, []);
   return (
     <div className="mainContainer">
